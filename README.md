@@ -1,4 +1,4 @@
-# practix_ugc
+# practix_ugc_2
 
 ## Как запустить проект:
 
