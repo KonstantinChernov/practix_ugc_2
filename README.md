@@ -16,3 +16,9 @@ docker-compose up
 Репозиторий Auth:
 https://github.com/KonstantinChernov/practix_auth
 
+Репозиторий UGC-1
+https://github.com/KonstantinChernov/practix_ugc
+
+Репозиторий Async-api
+https://github.com/KonstantinChernov/practix_async_api
+
