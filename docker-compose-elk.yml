@@ -1,0 +1,49 @@
+services:
+    logstash-elk:
+      image: docker.elastic.co/logstash/logstash:7.10.2
+      environment:
+        XPACK_MONITORING_ENABLED: "false"
+        ES_HOST: "elasticsearch-elk:9200"
+      ports:
+        - "5044:5044/udp"
+        - "5045:5045"
+      volumes:
+        - ./deploy/logstash.conf:/config/logstash.conf:ro
+        - /tmp/logs/nginx/:/var/log/nginx/:ro
+      command: logstash -f /config/logstash.conf
+      networks:
+        - elk_stack
+        - movies_network
+
+    elasticsearch-elk:
+      image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+      environment:
+        discovery.type: single-node
+      ports:
+        - 9200:9200
+      volumes:
+        - /tmp/esdata:/tmp/elasticsearch/data
+      networks:
+        - elk_stack
+        - movies_network
+
+
+    kibana-elk:
+      image: docker.elastic.co/kibana/kibana:7.10.2
+      ports:
+        - "5601:5601"
+      depends_on:
+        - elasticsearch-elk
+      environment:
+        ELASTICSEARCH_URL: http://elasticsearch-elk:9200
+        ELASTICSEARCH_HOSTS: '["http://elasticsearch-elk:9200"]'
+      networks:
+        - elk_stack
+        - movies_network
+
+networks:
+ elk_stack:
+   external: true
+  movies_network:
+    external: true
+    name: movies_network

@@ -1,6 +1,8 @@
 filebeat.inputs:
 - type: log
   enabled: true
+  fields:
+    source: 'ugc-2'
   paths:
     - /var/log/nginx/*
   json:
@@ -9,4 +11,4 @@ filebeat.inputs:
 
 output.logstash:
   enabled: true
-  hosts: ["logstash-ugc-elk:5045"]
+  hosts: ["logstash-elk:5045"]

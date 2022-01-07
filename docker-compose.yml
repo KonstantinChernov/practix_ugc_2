@@ -13,6 +13,7 @@ services:
         PYTHONUNBUFFERED: 1
       networks:
         - elk_stack
+        - movies_network
 
     nginx-ugc-2:
       image: nginx:1.19.2
@@ -24,56 +25,11 @@ services:
         - app-ugc-2
       ports:
         - 8080:80
-#      logging:
-#        driver: gelf
-#        options:
-#          gelf-address: udp://127.0.0.1:5044
-#          tag: nginx
       networks:
         - elk_stack
+        - movies_network
 
-    logstash-ugc-elk:
-      image: docker.elastic.co/logstash/logstash:7.10.2
-      environment:
-        XPACK_MONITORING_ENABLED: "false"
-        ES_HOST: "elasticsearch-ugc-elk:9200"
-      ports:
-        - "5044:5044/udp"
-        - "5045:5045"
-      volumes:
-        - ./deploy/logstash.conf:/config/logstash.conf:ro
-        - ./deploy/patterns/nginx:/opt/logstash/patterns/nginx:ro
-        - /tmp/logs/nginx/:/var/log/nginx/:ro
-      command: logstash -f /config/logstash.conf
-      networks:
-        - elk_stack
-
-
-    elasticsearch-ugc-elk:
-      image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
-      environment:
-        discovery.type: single-node
-      ports:
-        - 9200:9200
-      volumes:
-        - /tmp/esdata:/tmp/elasticsearch/data
-      networks:
-        - elk_stack
-
-
-    kibana-ugc-elk:
-      image: docker.elastic.co/kibana/kibana:7.10.2
-      ports:
-        - "5601:5601"
-      depends_on:
-        - elasticsearch-ugc-elk
-      environment:
-        ELASTICSEARCH_URL: http://elasticsearch-ugc-elk:9200
-        ELASTICSEARCH_HOSTS: '["http://elasticsearch-ugc-elk:9200"]'
-      networks:
-        - elk_stack
-
-    filebeat:
+    filebeat-ugc-2:
       image: docker.elastic.co/beats/filebeat:7.3.2
       volumes:
         - /tmp/logs/nginx:/var/log/nginx:ro
@@ -81,14 +37,13 @@ services:
       depends_on:
         - app-ugc-2
         - nginx-ugc-2
-        - logstash-ugc-elk
-        - elasticsearch-ugc-elk
-        - kibana-ugc-elk
-      links:
-        - logstash-ugc-elk
       networks:
         - elk_stack
+        - movies_network
 
 networks:
  elk_stack:
-   driver: bridge
+   external: true
+  movies_network:
+    external: true
+    name: movies_network

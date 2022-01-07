@@ -26,9 +26,6 @@ sentry_sdk.init(dsn=config.SENTRY_DSN)
 app.logger = logging.getLogger(__name__)
 app.logger.setLevel(logging.INFO)
 
-logstash_handler = logstash.LogstashHandler('logstash-ugc-elk', 5044, version=1)
-app.logger.addHandler(logstash_handler)
-
 
 @app.middleware('http')
 async def add_tracing(request: Request, call_next):
