@@ -20,3 +20,10 @@ AUTH_GRPC_PORT = os.getenv('AUTH_GRPC_PORT', '50051')
 
 
 SENTRY_DSN = os.getenv('SENTRY_DSN')
+
+MONGO_DETAILS = os.getenv('mongodb://localhost:27017')
+MONGO_DB_NAME = 'ugc'
+MONGO_MARK_COLLECTION_NAME = 'marks'
+MONGO_FAVORITE_COLLECTION_NAME = 'favorites'
+MONGO_REVIEW_COLLECTION_NAME = 'reviews'
+MONGO_REVIEW_LIKES_COLLECTION_NAME = 'review_likes'
