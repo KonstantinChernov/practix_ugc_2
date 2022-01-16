@@ -38,9 +38,9 @@ class Mark(BaseModel):
         return v
 
 
-mark = Mark(film_id='0253a065-a55f-4984-b99a-3b0619678478',
-            mark=9,
-            user_login='fdsafds')
+mark = Mark(
+    film_id='0253a065-a55f-4984-b99a-3b0619678478', mark=9, user_login='fdsafds'
+)
 
 
 class AverageFilmRatingResponseModel(BaseModel):

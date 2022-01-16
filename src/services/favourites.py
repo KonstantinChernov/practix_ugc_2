@@ -14,8 +14,10 @@ class FavoritesService(BaseService):
 
 @lru_cache()
 def get_favorite_service(
-        db_adapter: AbstractDBAdapter = Depends(get_mongo),
+    db_adapter: AbstractDBAdapter = Depends(get_mongo),
 ) -> FavoritesService:
-    return FavoritesService(db_adapter=db_adapter,
-                            model=Favorite,
-                            collection_name=MONGO_FAVORITE_COLLECTION_NAME)
+    return FavoritesService(
+        db_adapter=db_adapter,
+        model=Favorite,
+        collection_name=MONGO_FAVORITE_COLLECTION_NAME,
+    )
