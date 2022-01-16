@@ -26,21 +26,22 @@ def marks_count(count=1):
 
     return marks
 
+
 mark1 = gen_mark()
 marks10 = marks_count(10)
 
 
 def insert_one_mark():
-    result = marks.insert_one(mark1)
+    marks.insert_one(mark1)
 
 
 def insert_marks(count):
     records = marks_count(count)
-    result = marks.insert_many(records)
+    marks.insert_many(records)
 
 
 def show_one_mark():
-    result = marks.find_one(mark1)
+    marks.find_one(mark1)
 
 
 def insert_10_marks():
@@ -77,4 +78,3 @@ print("Insert 1000 records: ", t_insert_1000.timeit(1))
 print("Show record: ", t_show_one.timeit(1))
 print("Insert 10000 records: ", t_insert_10000.timeit(1))
 print("Show record: ", t_show_one.timeit(1))
-
