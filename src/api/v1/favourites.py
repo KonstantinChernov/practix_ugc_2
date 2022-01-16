@@ -29,7 +29,8 @@ async def get_favorites(
 ):
     login = get_user_login(request)
     favorites = await favorite_service.get_objects(user_login=login)
-    return JSONResponse(content={"type": "success", "data": jsonable_encoder(favorites)},
+    return JSONResponse(content={'type': 'success',
+                                 'data': jsonable_encoder(favorites)},
                         status_code=HTTPStatus.OK)
 
 
@@ -51,9 +52,11 @@ async def add_favorites(
     try:
         await favorite_service.add_object(favorite)
     except ObjectAlreadyExists:
-        return JSONResponse(content={"type": "error", "message": "object already exist"},
+        return JSONResponse(content={'type': 'error',
+                                     'message': 'object already exist'},
                             status_code=HTTPStatus.BAD_REQUEST)
-    return JSONResponse(content={"type": "success", "data": jsonable_encoder(favorite, exclude_none=True)},
+    return JSONResponse(content={'type': 'success',
+                                 'data': jsonable_encoder(favorite, exclude_none=True)},
                         status_code=HTTPStatus.CREATED)
 
 
@@ -74,9 +77,11 @@ async def delete_favorite(
     try:
         await favorite_service.delete_object(_id=favorite_id, user_login=login)
     except ObjectNotExists:
-        return JSONResponse(content={"type": "error", "message": "object doesn't exist"},
+        return JSONResponse(content={'type': 'error',
+                                     'message': 'object doesn\'t exist'},
                             status_code=HTTPStatus.NOT_FOUND)
     except ForbiddenError:
-        return JSONResponse(content={"type": "error", "message": "access denied"},
+        return JSONResponse(content={'type': 'error',
+                                     'message': 'access denied'},
                             status_code=HTTPStatus.FORBIDDEN)
     return Response(status_code=HTTPStatus.NO_CONTENT)

@@ -67,7 +67,8 @@ async def delete_mark_from_film(
     try:
         await film_service.delete_object(film_id=data.film_id, user_login=login)
     except ObjectNotExists:
-        return JSONResponse(content={"type": "error", "message": "object doesn't exist"},
+        return JSONResponse(content={'type': 'error',
+                                     'message': 'object doesn\'t exist'},
                             status_code=HTTPStatus.NOT_FOUND)
     return Response(status_code=HTTPStatus.NO_CONTENT)
 
@@ -90,12 +91,14 @@ async def update_mark_from_film(
         Mark.check_mark(data.mark)
         await film_service.update_mark(film_id=data.film_id, user_login=login, mark_value=data.mark)
     except ObjectNotExists:
-        return JSONResponse(content={"type": "error", "message": "object doesn't exist"},
+        return JSONResponse(content={'type': 'error',
+                                     'message': 'object doesn\'t exist'},
                             status_code=HTTPStatus.NOT_FOUND)
     except ValueError:
-        return JSONResponse(content={"type": "error", "message": "invalid mark value"},
+        return JSONResponse(content={'type': 'error',
+                                     'message': 'invalid mark value'},
                             status_code=HTTPStatus.BAD_REQUEST)
-    return JSONResponse(content={"type": "success"},
+    return JSONResponse(content={'type': 'success'},
                         status_code=HTTPStatus.OK)
 
 
@@ -117,10 +120,13 @@ async def set_mark_to_film(
         mark = Mark(**data.dict(), user_login=login)
         await film_service.add_object(mark)
     except ObjectAlreadyExists:
-        return JSONResponse(content={"type": "error", "message": "object already exist"},
+        return JSONResponse(content={'type': 'error',
+                                     'message': 'object already exist'},
                             status_code=HTTPStatus.BAD_REQUEST)
     except ValueError:
-        return JSONResponse(content={"type": "error", "message": "invalid mark value"},
+        return JSONResponse(content={'type': 'error',
+                                     'message': 'invalid mark value'},
                             status_code=HTTPStatus.BAD_REQUEST)
-    return JSONResponse(content={"type": "success", "data": jsonable_encoder(mark)},
+    return JSONResponse(content={'type': 'success',
+                                 'data': jsonable_encoder(mark)},
                         status_code=HTTPStatus.CREATED)

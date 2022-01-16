@@ -33,10 +33,12 @@ async def add_reviews(
         review = Review(**data.dict(), user_login=login)
         await review_service.add_object(review)
     except ObjectAlreadyExists:
-        return JSONResponse(content={"type": "error", "message": "object already exist"},
+        return JSONResponse(content={'type': 'error',
+                                     'message': 'object already exist'},
                             status_code=HTTPStatus.BAD_REQUEST)
 
-    return JSONResponse(content={"type": "success", "data": jsonable_encoder(review, exclude_none=True)},
+    return JSONResponse(content={'type': 'success',
+                                 'data': jsonable_encoder(review, exclude_none=True)},
                         status_code=HTTPStatus.CREATED)
 
 
@@ -57,10 +59,12 @@ async def delete_review(
     try:
         await review_service.delete_object(_id=review_id, user_login=login)
     except ObjectNotExists:
-        return JSONResponse(content={"type": "error", "message": "object doesn't exist"},
+        return JSONResponse(content={'type': 'error',
+                                     'message': 'object doesn\'t exist'},
                             status_code=HTTPStatus.NOT_FOUND)
     except ForbiddenError:
-        return JSONResponse(content={"type": "error", "message": "access denied"},
+        return JSONResponse(content={'type': 'error',
+                                     'message': 'access denied'},
                             status_code=HTTPStatus.FORBIDDEN)
     return Response(status_code=HTTPStatus.NO_CONTENT)
 
@@ -81,9 +85,10 @@ async def set_like(
     try:
         await review_service.set_like_to_review(review_id=review_id, user_login=login)
     except ObjectNotExists:
-        return JSONResponse(content={"type": "error", "message": "object doesn't exist"},
+        return JSONResponse(content={'type': 'error',
+                                     'message': 'object doesn\'t exist'},
                             status_code=HTTPStatus.NOT_FOUND)
-    return JSONResponse(content={"type": "success"},
+    return JSONResponse(content={'type': 'success'},
                         status_code=HTTPStatus.OK)
 
 
@@ -100,5 +105,6 @@ async def get_reviews(
 
 ):
     reviews = await review_service.get_objects(film_id=data.film_id)
-    return JSONResponse(content={"type": "success", "data": jsonable_encoder(reviews)},
+    return JSONResponse(content={'type': 'success',
+                                 'data': jsonable_encoder(reviews)},
                         status_code=HTTPStatus.OK)
