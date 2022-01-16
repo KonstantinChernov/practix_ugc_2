@@ -10,7 +10,9 @@ from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
 from api.v1 import marks, reviews, favourites
 from core import config
+from db import mongodb
 from tracer import tracer
+from motor.motor_asyncio import AsyncIOMotorClient
 
 app = FastAPI(
     docs_url='/api/openapi',
@@ -20,6 +22,12 @@ app = FastAPI(
     version='1.0.0',
     default_response_class=ORJSONResponse,
 )
+
+
+@app.on_event('startup')
+async def startup():
+    mongodb.mongo_client = AsyncIOMotorClient(config.MONGO_DETAILS)
+
 
 sentry_sdk.init(dsn=config.SENTRY_DSN)
 
