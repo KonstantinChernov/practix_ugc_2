@@ -6,8 +6,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 from auth_grpc.auth_check import check_permission
-from db.models import (AverageFilmRatingResponseModel,
-                       FilmMarksCountResponseModel, Mark)
+from db.models import AverageFilmRatingResponseModel, FilmMarksCountResponseModel, Mark
 from exceptions import ObjectAlreadyExists, ObjectNotExists
 from models.marks import BaseMark, MarkAction
 from services.marks import FilmsService, get_films_service
@@ -27,11 +26,12 @@ logging.basicConfig(level=logging.INFO)
 )
 @check_permission(roles=['Subscriber'])
 async def get_average_film_rating(
-        data: BaseMark,
-        film_service: FilmsService = Depends(get_films_service)
+    data: BaseMark, film_service: FilmsService = Depends(get_films_service)
 ):
     average_rating = await film_service.get_average_rating(film_id=data.film_id)
-    return AverageFilmRatingResponseModel(film_id=data.film_id, average_rating=average_rating)
+    return AverageFilmRatingResponseModel(
+        film_id=data.film_id, average_rating=average_rating
+    )
 
 
 @router.get(
@@ -43,8 +43,7 @@ async def get_average_film_rating(
 )
 @check_permission(roles=['Subscriber'])
 async def get_film_marks_count(
-        data: BaseMark,
-        film_service: FilmsService = Depends(get_films_service)
+    data: BaseMark, film_service: FilmsService = Depends(get_films_service)
 ):
     marks_count = await film_service.get_marks_count(film_id=data.film_id)
     return FilmMarksCountResponseModel(film_id=data.film_id, marks_count=marks_count)
@@ -59,17 +58,18 @@ async def get_film_marks_count(
 )
 @check_permission(roles=['Subscriber'])
 async def delete_mark_from_film(
-        request: Request,
-        data: BaseMark,
-        film_service: FilmsService = Depends(get_films_service)
+    request: Request,
+    data: BaseMark,
+    film_service: FilmsService = Depends(get_films_service),
 ):
     login = get_user_login(request)
     try:
         await film_service.delete_object(film_id=data.film_id, user_login=login)
     except ObjectNotExists:
-        return JSONResponse(content={'type': 'error',
-                                     'message': 'object doesn\'t exist'},
-                            status_code=HTTPStatus.NOT_FOUND)
+        return JSONResponse(
+            content={'type': 'error', 'message': 'object doesn\'t exist'},
+            status_code=HTTPStatus.NOT_FOUND,
+        )
     return Response(status_code=HTTPStatus.NO_CONTENT)
 
 
@@ -84,22 +84,25 @@ async def delete_mark_from_film(
 async def update_mark_from_film(
     request: Request,
     data: MarkAction,
-    film_service: FilmsService = Depends(get_films_service)
+    film_service: FilmsService = Depends(get_films_service),
 ):
     login = get_user_login(request)
     try:
         Mark.check_mark(data.mark)
-        await film_service.update_mark(film_id=data.film_id, user_login=login, mark_value=data.mark)
+        await film_service.update_mark(
+            film_id=data.film_id, user_login=login, mark_value=data.mark
+        )
     except ObjectNotExists:
-        return JSONResponse(content={'type': 'error',
-                                     'message': 'object doesn\'t exist'},
-                            status_code=HTTPStatus.NOT_FOUND)
+        return JSONResponse(
+            content={'type': 'error', 'message': 'object doesn\'t exist'},
+            status_code=HTTPStatus.NOT_FOUND,
+        )
     except ValueError:
-        return JSONResponse(content={'type': 'error',
-                                     'message': 'invalid mark value'},
-                            status_code=HTTPStatus.BAD_REQUEST)
-    return JSONResponse(content={'type': 'success'},
-                        status_code=HTTPStatus.OK)
+        return JSONResponse(
+            content={'type': 'error', 'message': 'invalid mark value'},
+            status_code=HTTPStatus.BAD_REQUEST,
+        )
+    return JSONResponse(content={'type': 'success'}, status_code=HTTPStatus.OK)
 
 
 @router.post(
@@ -113,20 +116,23 @@ async def update_mark_from_film(
 async def set_mark_to_film(
     request: Request,
     data: MarkAction,
-    film_service: FilmsService = Depends(get_films_service)
+    film_service: FilmsService = Depends(get_films_service),
 ):
     login = get_user_login(request)
     try:
         mark = Mark(**data.dict(), user_login=login)
         await film_service.add_object(mark)
     except ObjectAlreadyExists:
-        return JSONResponse(content={'type': 'error',
-                                     'message': 'object already exist'},
-                            status_code=HTTPStatus.BAD_REQUEST)
+        return JSONResponse(
+            content={'type': 'error', 'message': 'object already exist'},
+            status_code=HTTPStatus.BAD_REQUEST,
+        )
     except ValueError:
-        return JSONResponse(content={'type': 'error',
-                                     'message': 'invalid mark value'},
-                            status_code=HTTPStatus.BAD_REQUEST)
-    return JSONResponse(content={'type': 'success',
-                                 'data': jsonable_encoder(mark)},
-                        status_code=HTTPStatus.CREATED)
+        return JSONResponse(
+            content={'type': 'error', 'message': 'invalid mark value'},
+            status_code=HTTPStatus.BAD_REQUEST,
+        )
+    return JSONResponse(
+        content={'type': 'success', 'data': jsonable_encoder(mark)},
+        status_code=HTTPStatus.CREATED,
+    )
