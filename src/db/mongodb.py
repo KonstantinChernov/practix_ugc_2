@@ -1,7 +1,8 @@
+from abc import abstractmethod
+from typing import Any, Optional
+
 import backoff
 from motor.motor_asyncio import AsyncIOMotorClient
-from typing import Optional, Any
-from abc import abstractmethod
 
 from core.config import MONGO_DB_NAME
 

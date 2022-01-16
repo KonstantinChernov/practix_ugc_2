@@ -1,16 +1,16 @@
 import logging
-
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, Request, Response
-from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 
 from auth_grpc.auth_check import check_permission
-from db.models import Mark, AverageFilmRatingResponseModel, FilmMarksCountResponseModel
+from db.models import (AverageFilmRatingResponseModel,
+                       FilmMarksCountResponseModel, Mark)
 from exceptions import ObjectAlreadyExists, ObjectNotExists
-from services.marks import FilmsService, get_films_service
 from models.marks import BaseMark, MarkAction
+from services.marks import FilmsService, get_films_service
 from utils import get_user_login
 
 router = APIRouter()

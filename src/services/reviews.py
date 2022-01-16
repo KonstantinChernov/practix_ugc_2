@@ -4,11 +4,12 @@ from functools import lru_cache
 from bson import ObjectId
 from fastapi import Depends
 
-from db.mongodb import get_mongo, AbstractDBAdapter
-from services.base_services.object_service import BaseService
-from core.config import MONGO_REVIEW_COLLECTION_NAME, MONGO_REVIEW_LIKES_COLLECTION_NAME
+from core.config import (MONGO_REVIEW_COLLECTION_NAME,
+                         MONGO_REVIEW_LIKES_COLLECTION_NAME)
+from db.mongodb import AbstractDBAdapter, get_mongo
 from exceptions import ObjectNotExists
 from models.reviews import Review, ReviewLike
+from services.base_services.object_service import BaseService
 
 
 class ReviewService(BaseService):
