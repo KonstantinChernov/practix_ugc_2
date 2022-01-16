@@ -1,0 +1,17 @@
+__Test results:__
+
+Insert one record:  0.02310371
+
+Show record:  0.0030450610000000156
+
+Insert 10 records:  0.0041487050000000025
+
+Show record:  0.0035110790000000003
+
+Insert 100 records:  0.008917373000000006
+
+Show record:  0.0030211269999999846
+
+Insert 1000 records:  0.061235492
+
+Show record:  0.005573696999999989
