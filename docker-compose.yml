@@ -173,7 +173,7 @@ services:
 
 networks:
  elk_stack:
-   external: true
-  movies_network:
+    external: true
+ movies_network:
     external: true
     name: movies_network
