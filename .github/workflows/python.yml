@@ -38,7 +38,7 @@ jobs:
         continue-on-error: true
 
       - name: wemake-python-styleguide
-        uses: wemake-services/wemake-python-styleguide
+        uses: wemake-services/wemake-python-styleguide@master
       - name: Custom Action
         runs: echo "{{ steps.wemake-python-styleguide.outputs.output }}"
 
