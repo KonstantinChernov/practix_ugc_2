@@ -26,21 +26,22 @@ def marks_count(count=1):
 
     return marks
 
+
 mark1 = gen_mark()
 marks10 = marks_count(10)
 
 
 def insert_one_mark():
-    result = marks.insert_one(mark1)
+    marks.insert_one(mark1)
 
 
 def insert_marks(count):
     records = marks_count(count)
-    result = marks.insert_many(records)
+    marks.insert_many(records)
 
 
 def show_one_mark():
-    result = marks.find_one(mark1)
+    marks.find_one(mark1)
 
 
 def insert_10_marks():
@@ -59,22 +60,24 @@ def insert_10000_marks():
     insert_marks(10000)
 
 
-t_one = Timer("insert_one_mark()", "from __main__ import insert_one_mark")
-t_show_one = Timer("show_one_mark()", "from __main__ import show_one_mark")
-t_insert_10 = Timer("insert_10_marks()", "from __main__ import insert_10_marks")
-t_insert_100 = Timer("insert_100_marks()", "from __main__ import insert_100_marks")
-t_insert_1000 = Timer("insert_1000_marks()", "from __main__ import insert_1000_marks")
-t_insert_10000 = Timer("insert_10000_marks()", "from __main__ import insert_10000_marks")
+t_one = Timer('insert_one_mark()', 'from __main__ import insert_one_mark')
+t_show_one = Timer('show_one_mark()', 'from __main__ import show_one_mark')
+t_insert_10 = Timer('insert_10_marks()', 'from __main__ import insert_10_marks')
+t_insert_100 = Timer('insert_100_marks()', 'from __main__ import insert_100_marks')
+t_insert_1000 = Timer('insert_1000_marks()', 'from __main__ import insert_1000_marks')
+t_insert_10000 = Timer(
+    'insert_10000_marks()', 'from __main__ import insert_10000_marks'
+)
 
 
-print("Insert one record: ", t_one.timeit(1))
-print("Show record: ", t_show_one.timeit(1))
-print("Insert 10 records: ", t_insert_10.timeit(1))
-print("Show record: ", t_show_one.timeit(1))
-print("Insert 100 records: ", t_insert_100.timeit(1))
-print("Show record: ", t_show_one.timeit(1))
-print("Insert 1000 records: ", t_insert_1000.timeit(1))
-print("Show record: ", t_show_one.timeit(1))
-print("Insert 10000 records: ", t_insert_10000.timeit(1))
-print("Show record: ", t_show_one.timeit(1))
+print('Insert one record: ', t_one.timeit(1))
+print('Show record: ', t_show_one.timeit(1))
+print('Insert 10 records: ', t_insert_10.timeit(1))
+print('Show record: ', t_show_one.timeit(1))
+print('Insert 100 records: ', t_insert_100.timeit(1))
+print('Show record: ', t_show_one.timeit(1))
+print('Insert 1000 records: ', t_insert_1000.timeit(1))
+print('Show record: ', t_show_one.timeit(1))
+print('Insert 10000 records: ', t_insert_10000.timeit(1))
+print('Show record: ', t_show_one.timeit(1))
 

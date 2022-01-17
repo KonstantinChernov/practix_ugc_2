@@ -2,10 +2,10 @@ from functools import lru_cache
 
 from fastapi import Depends
 
-from db.mongodb import get_mongo, AbstractDBAdapter
+from core.config import MONGO_FAVORITE_COLLECTION_NAME
+from db.mongodb import AbstractDBAdapter, get_mongo
 from models.favorites import Favorite
 from services.base_services.object_service import BaseService
-from core.config import MONGO_FAVORITE_COLLECTION_NAME
 
 
 class FavoritesService(BaseService):
@@ -14,9 +14,10 @@ class FavoritesService(BaseService):
 
 @lru_cache()
 def get_favorite_service(
-        db_adapter: AbstractDBAdapter = Depends(get_mongo),
+    db_adapter: AbstractDBAdapter = Depends(get_mongo),
 ) -> FavoritesService:
-    return FavoritesService(db_adapter=db_adapter,
-                            model=Favorite,
-                            collection_name=MONGO_FAVORITE_COLLECTION_NAME)
-
+    return FavoritesService(
+        db_adapter=db_adapter,
+        model=Favorite,
+        collection_name=MONGO_FAVORITE_COLLECTION_NAME,
+    )

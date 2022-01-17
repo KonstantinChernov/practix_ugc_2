@@ -1,6 +1,7 @@
-from pydantic import BaseModel
 import uuid
 from typing import Any
+
+from pydantic import BaseModel
 
 
 class FavouriteIn(BaseModel):
@@ -11,6 +12,3 @@ class Favorite(BaseModel):
     id: Any
     film_id: uuid.UUID
     user_login: str
-
-
-

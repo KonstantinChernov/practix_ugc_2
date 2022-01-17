@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field, validator, ValidationError
 import uuid
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+
+from pydantic import BaseModel, Field, ValidationError, validator
 
 
 class Review(BaseModel):
@@ -36,7 +37,10 @@ class Mark(BaseModel):
             raise ValueError('Invalid value for mark field')
         return v
 
-mark = Mark(film_id='0253a065-a55f-4984-b99a-3b0619678478', mark=9, user_login='fdsafds')
+
+mark = Mark(
+    film_id='0253a065-a55f-4984-b99a-3b0619678478', mark=9, user_login='fdsafds'
+)
 
 
 class AverageFilmRatingResponseModel(BaseModel):

@@ -1,7 +1,8 @@
-from pydantic import BaseModel, validator
 import uuid
-from typing import Optional, Any
 from datetime import datetime
+from typing import Any, Optional
+
+from pydantic import BaseModel, validator
 
 
 class ReviewIn(BaseModel):

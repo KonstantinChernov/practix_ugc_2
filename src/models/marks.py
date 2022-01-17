@@ -1,7 +1,8 @@
-from pydantic import BaseModel, validator
 import uuid
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+
+from pydantic import BaseModel, validator
 
 
 class BaseMark(BaseModel):
@@ -16,6 +17,7 @@ class MarkAction(BaseMark):
         if 0 > v >= 10:
             raise ValueError('Invalid value for mark field')
         return v
+
 
 class Mark(BaseModel):
     film_id: Optional[uuid.UUID]

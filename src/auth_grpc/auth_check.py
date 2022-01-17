@@ -9,7 +9,9 @@ from auth_grpc.auth_pb2_grpc import AuthStub
 from core import config
 from tracer import tracer
 
-auth_channel = grpc.insecure_channel(f'{ config.AUTH_GRPC_HOST}:{ config.AUTH_GRPC_PORT}')
+auth_channel = grpc.insecure_channel(
+    f'{ config.AUTH_GRPC_HOST}:{ config.AUTH_GRPC_PORT}'
+)
 auth_client = AuthStub(auth_channel)
 
 
