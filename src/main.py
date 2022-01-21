@@ -27,6 +27,11 @@ async def startup():
     mongodb.mongo_client = AsyncIOMotorClient(config.MONGO_DETAILS)
 
 
+@app.on_event('shutdown')
+async def shutdown():
+    await mongodb.mongo_client.close()
+
+
 sentry_sdk.init(dsn=config.SENTRY_DSN)
 
 app.logger = logging.getLogger(__name__)

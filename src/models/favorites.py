@@ -1,14 +1,14 @@
 import uuid
 from typing import Any
 
-from pydantic import BaseModel
+from utils import CustomBaseModel
 
 
-class FavouriteIn(BaseModel):
+class FavouriteIn(CustomBaseModel):
     film_id: uuid.UUID
 
 
-class Favorite(BaseModel):
+class Favorite(CustomBaseModel):
     id: Any
     film_id: uuid.UUID
     user_login: str
