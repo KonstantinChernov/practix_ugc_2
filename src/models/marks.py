@@ -13,6 +13,7 @@ class BaseMark(CustomBaseModel):
 
 class MarkAction(CustomBaseModel):
     mark: int
+    film_id: uuid.UUID
 
     @validator('mark', pre=True, always=True)
     def check_mark(cls, v):
