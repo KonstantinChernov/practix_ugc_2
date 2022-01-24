@@ -1,15 +1,18 @@
-from pydantic import BaseModel, validator
 import uuid
-from typing import Optional, Any
 from datetime import datetime
+from typing import Any, Optional
+
+from pydantic import validator
+
+from utils import CustomBaseModel
 
 
-class ReviewIn(BaseModel):
+class ReviewIn(CustomBaseModel):
     film_id: uuid.UUID
     review: str
 
 
-class Review(BaseModel):
+class Review(CustomBaseModel):
     id: Any
     film_id: uuid.UUID
     review: str
@@ -22,15 +25,15 @@ class Review(BaseModel):
         return v or datetime.now()
 
 
-class ReviewLike(BaseModel):
+class ReviewLike(CustomBaseModel):
     review_id: str
     user_login: str
 
 
-class ReviewLikeIn(BaseModel):
+class ReviewLikeIn(CustomBaseModel):
     film_id: uuid.UUID
     user_login: str
 
 
-class ReviewsGetIn(BaseModel):
+class ReviewsGetIn(CustomBaseModel):
     film_id: uuid.UUID

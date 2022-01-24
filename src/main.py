@@ -1,18 +1,16 @@
-import asyncio
 import logging
 
-import logstash
 import sentry_sdk
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.responses import ORJSONResponse
+from motor.motor_asyncio import AsyncIOMotorClient
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
-from api.v1 import marks, reviews, favourites
+from api.v1 import favourites, marks, reviews
 from core import config
 from db import mongodb
 from tracer import tracer
-from motor.motor_asyncio import AsyncIOMotorClient
 
 app = FastAPI(
     docs_url='/api/openapi',
@@ -27,6 +25,11 @@ app = FastAPI(
 @app.on_event('startup')
 async def startup():
     mongodb.mongo_client = AsyncIOMotorClient(config.MONGO_DETAILS)
+
+
+@app.on_event('shutdown')
+async def shutdown():
+    await mongodb.mongo_client.close()
 
 
 sentry_sdk.init(dsn=config.SENTRY_DSN)

@@ -5,10 +5,11 @@ from fastapi import APIRouter, Depends, Request, Response
 from fastapi.params import Query
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 
 from auth_grpc.auth_check import check_permission
+from exceptions import ForbiddenError, ObjectAlreadyExists, ObjectNotExists
 from models.reviews import Review, ReviewIn, ReviewsGetIn
-from exceptions import ObjectAlreadyExists, ObjectNotExists, ForbiddenError
 from services.reviews import ReviewService, get_review_service
 from utils import get_user_login
 
@@ -26,19 +27,27 @@ logging.basicConfig(level=logging.INFO)
 )
 @check_permission(roles=['Subscriber'])
 async def add_reviews(
-        request: Request,
-        data: ReviewIn,
-        review_service: ReviewService = Depends(get_review_service)):
+    request: Request,
+    data: ReviewIn,
+    review_service: ReviewService = Depends(get_review_service),
+):
     login = get_user_login(request)
     try:
         review = Review(**data.dict(), user_login=login)
         await review_service.add_object(review)
     except ObjectAlreadyExists:
-        return JSONResponse(content={"type": "error", "message": "object already exist"},
-                            status_code=HTTPStatus.BAD_REQUEST)
+        return JSONResponse(
+            content={'type': 'error', 'message': 'object already exist'},
+            status_code=HTTPStatus.BAD_REQUEST,
+        )
 
-    return JSONResponse(content={"type": "success", "data": jsonable_encoder(review, exclude_none=True)},
-                        status_code=HTTPStatus.CREATED)
+    return JSONResponse(
+        content={
+            'type': 'success',
+            'data': jsonable_encoder(review, exclude_none=True),
+        },
+        status_code=HTTPStatus.CREATED,
+    )
 
 
 @router.delete(
@@ -50,19 +59,23 @@ async def add_reviews(
 )
 @check_permission(roles=['Subscriber'])
 async def delete_review(
-        request: Request,
-        review_id: str,
-        review_service: ReviewService = Depends(get_review_service)
+    request: Request,
+    review_id: str,
+    review_service: ReviewService = Depends(get_review_service),
 ):
     login = get_user_login(request)
     try:
         await review_service.delete_object(_id=review_id, user_login=login)
     except ObjectNotExists:
-        return JSONResponse(content={"type": "error", "message": "object doesn't exist"},
-                            status_code=HTTPStatus.NOT_FOUND)
+        return JSONResponse(
+            content={'type': 'error', 'message': 'object doesn\'t exist'},
+            status_code=HTTPStatus.NOT_FOUND,
+        )
     except ForbiddenError:
-        return JSONResponse(content={"type": "error", "message": "access denied"},
-                            status_code=HTTPStatus.FORBIDDEN)
+        return JSONResponse(
+            content={'type': 'error', 'message': 'access denied'},
+            status_code=HTTPStatus.FORBIDDEN,
+        )
     return Response(status_code=HTTPStatus.NO_CONTENT)
 
 
@@ -75,17 +88,19 @@ async def delete_review(
 )
 @check_permission(roles=['Subscriber'])
 async def set_like(
-        request: Request,
-        review_id: str,
-        review_service: ReviewService = Depends(get_review_service)):
+    request: Request,
+    review_id: str,
+    review_service: ReviewService = Depends(get_review_service),
+):
     login = get_user_login(request)
     try:
         await review_service.set_like_to_review(review_id=review_id, user_login=login)
     except ObjectNotExists:
-        return JSONResponse(content={"type": "error", "message": "object doesn't exist"},
-                            status_code=HTTPStatus.NOT_FOUND)
-    return JSONResponse(content={"type": "success"},
-                        status_code=HTTPStatus.OK)
+        return JSONResponse(
+            content={'type': 'error', 'message': 'object doesn\'t exist'},
+            status_code=HTTPStatus.NOT_FOUND,
+        )
+    return JSONResponse(content={'type': 'success'}, status_code=HTTPStatus.OK)
 
 
 @router.get(
@@ -96,12 +111,14 @@ async def set_like(
 )
 @check_permission(roles=['Subscriber'])
 async def get_reviews(
-        data: ReviewsGetIn,
-        count: int = Query(20),
-        page: int = Query(1),
-        review_service: ReviewService = Depends(get_review_service),
+    data: ReviewsGetIn,
+    count: int = Query(20),
+    page: int = Query(1),
+    review_service: ReviewService = Depends(get_review_service),
 
 ):
     reviews = await review_service.get_objects(count=count, page=page, film_id=data.film_id)
-    return JSONResponse(content={"type": "success", "data": jsonable_encoder(reviews)},
-                        status_code=HTTPStatus.OK)
+    return JSONResponse(
+        content={'type': 'success', 'data': jsonable_encoder(reviews)},
+        status_code=HTTPStatus.OK,
+    )

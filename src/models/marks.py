@@ -1,14 +1,17 @@
-from pydantic import BaseModel, validator
 import uuid
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+
+from pydantic import validator
+
+from utils import CustomBaseModel
 
 
-class BaseMark(BaseModel):
+class BaseMark(CustomBaseModel):
     film_id: uuid.UUID
 
 
-class MarkAction(BaseMark):
+class MarkAction(CustomBaseModel):
     mark: int
 
     @validator('mark', pre=True, always=True)
@@ -18,7 +21,7 @@ class MarkAction(BaseMark):
         return v
 
 
-class Mark(BaseModel):
+class Mark(CustomBaseModel):
     film_id: Optional[uuid.UUID]
     mark: int
     datetime: Optional[datetime]
@@ -37,11 +40,11 @@ class Mark(BaseModel):
         return v
 
 
-class AverageFilmRatingResponseModel(BaseModel):
+class AverageFilmRatingResponseModel(CustomBaseModel):
     film_id: uuid.UUID
     average_rating: float
 
 
-class FilmMarksCountResponseModel(BaseModel):
+class FilmMarksCountResponseModel(CustomBaseModel):
     film_id: uuid.UUID
     marks_count: int

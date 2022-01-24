@@ -42,8 +42,8 @@ services:
         - movies_network
 
 networks:
- elk_stack:
-   external: true
+  elk_stack:
+    external: true
   movies_network:
     external: true
     name: movies_network
