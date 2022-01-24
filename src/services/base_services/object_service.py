@@ -16,11 +16,11 @@ class BaseService:
         self.model = model
         self.collection_name = collection_name
 
-    async def get_objects(self, **kwargs):
+    async def get_objects(self, count: int = 15, page: int = 1, **kwargs):
         objects = await self.db_adapter.get_objects_from_db(self.model,
                                                             kwargs,
                                                             self.collection_name)
-        return objects
+        return objects[count * (page - 1):count * page]
 
     async def add_object(self, obj: Any):
         already_exists_object = await self.db_adapter.get_object_from_db(self.model,

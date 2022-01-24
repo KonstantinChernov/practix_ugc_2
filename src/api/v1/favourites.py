@@ -2,6 +2,7 @@ import logging
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, Request, Response
+from fastapi.params import Query
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
@@ -25,10 +26,12 @@ logging.basicConfig(level=logging.INFO)
 @check_permission(roles=['Subscriber'])
 async def get_favorites(
         request: Request,
+        count: int = Query(20),
+        page: int = Query(1),
         favorite_service: FavoritesService = Depends(get_favorite_service)
 ):
     login = get_user_login(request)
-    favorites = await favorite_service.get_objects(user_login=login)
+    favorites = await favorite_service.get_objects(count=count, page=page, user_login=login)
     return JSONResponse(content={"type": "success", "data": jsonable_encoder(favorites)},
                         status_code=HTTPStatus.OK)
 

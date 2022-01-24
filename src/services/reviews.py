@@ -31,9 +31,9 @@ class ReviewService(BaseService):
         await self.db_adapter.add_object_to_db({'review_id': review_id, 'user_login': user_login},
                                                MONGO_REVIEW_LIKES_COLLECTION_NAME)
 
-    async def get_objects(self, film_id: uuid.UUID):
+    async def get_objects(self, count: int = 15, page: int = 1, **kwargs):
         film_reviews = await self.db_adapter.get_objects_from_db(self.model,
-                                                                 {'film_id': film_id},
+                                                                 {'film_id': kwargs['film_id']},
                                                                  self.collection_name)
         if film_reviews:
             for review in film_reviews:
