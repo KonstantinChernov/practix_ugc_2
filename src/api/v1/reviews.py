@@ -2,6 +2,8 @@ import logging
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, Request, Response
+from fastapi.params import Query
+from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
@@ -110,9 +112,12 @@ async def set_like(
 @check_permission(roles=['Subscriber'])
 async def get_reviews(
     data: ReviewsGetIn,
+    count: int = Query(20),
+    page: int = Query(1),
     review_service: ReviewService = Depends(get_review_service),
+
 ):
-    reviews = await review_service.get_objects(film_id=data.film_id)
+    reviews = await review_service.get_objects(count=count, page=page, film_id=data.film_id)
     return JSONResponse(
         content={'type': 'success', 'data': jsonable_encoder(reviews)},
         status_code=HTTPStatus.OK,

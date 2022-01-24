@@ -3,9 +3,10 @@ from functools import lru_cache
 
 from fastapi import Depends
 
+from db.mongodb import get_mongo, AbstractDBAdapter
+from models.marks import Mark
+from services.base_services.object_service import BaseService
 from core.config import MONGO_MARK_COLLECTION_NAME
-from db.models import Mark
-from db.mongodb import AbstractDBAdapter, get_mongo
 from exceptions import ObjectNotExists
 from services.base_services.object_service import BaseService
 

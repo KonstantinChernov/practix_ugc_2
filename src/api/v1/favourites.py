@@ -2,12 +2,13 @@ import logging
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, Request, Response
-from fastapi.encoders import jsonable_encoder
+from fastapi.params import Query
 from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 
 from auth_grpc.auth_check import check_permission
-from exceptions import ForbiddenError, ObjectAlreadyExists, ObjectNotExists
 from models.favorites import Favorite, FavouriteIn
+from exceptions import ObjectAlreadyExists, ObjectNotExists, ForbiddenError
 from services.favourites import FavoritesService, get_favorite_service
 from utils import get_user_login
 
@@ -24,7 +25,10 @@ logging.basicConfig(level=logging.INFO)
 )
 @check_permission(roles=['Subscriber'])
 async def get_favorites(
-    request: Request, favorite_service: FavoritesService = Depends(get_favorite_service)
+        request: Request,
+        count: int = Query(20),
+        page: int = Query(1),
+        favorite_service: FavoritesService = Depends(get_favorite_service)
 ):
     login = get_user_login(request)
     favorites = await favorite_service.get_objects(user_login=login)

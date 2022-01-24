@@ -13,6 +13,7 @@ class BaseMark(CustomBaseModel):
 
 class MarkAction(CustomBaseModel):
     mark: int
+    film_id: uuid.UUID
 
     @validator('mark', pre=True, always=True)
     def check_mark(cls, v):
@@ -31,6 +32,12 @@ class Mark(CustomBaseModel):
     def set_datetime_now(cls, v):
         if not v:
             return datetime.now()
+        return v
+
+    @validator('mark', pre=True, always=True)
+    def check_mark(cls, v):
+        if v > 10 or v < 1:
+            raise ValueError('Invalid value for mark field')
         return v
 
 
